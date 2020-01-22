@@ -14,3 +14,7 @@ export default class components extends Component {
         )
     }
 }
+
+function cellPhoneMask(number){
+    let mask = '(00)00000-0000'
+}

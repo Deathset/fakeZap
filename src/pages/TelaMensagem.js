@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { View, ScrollView, TextInput, Button, Text, Dimensions, SafeAreaView, FlatList } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import socketIoClient from 'socket.io-client'
+import {createStackNavigator} from 'react-navigation-stack'
+import { createAppContainer, createNavigationContainer } from 'react-navigation';
 
 //import service from './service'
 export default class TelaMensagem extends Component {
@@ -15,6 +17,8 @@ export default class TelaMensagem extends Component {
 
 
   }
+
+ 
   componentDidMount(){
 
      /*
@@ -58,3 +62,5 @@ export default class TelaMensagem extends Component {
   }
 
 }
+
+
