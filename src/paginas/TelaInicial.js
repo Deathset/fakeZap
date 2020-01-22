@@ -1,6 +1,8 @@
 import React, { Component } from "react"
 import { View } from "react-native"
 import { StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native'
+import { createAppContainer, createNavigationContainer } from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack'
 
 export default class TelaInicial extends Component {
 
@@ -22,6 +24,7 @@ export default class TelaInicial extends Component {
 
 
 }
+
 
 
 const styles = StyleSheet.create({

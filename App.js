@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import TelaMensagem from './src/paginas/TelaMensagem'
-import {StyleSheet} from 'react-native'
-import TelaInicial from './src/paginas/TelaInicial'
+import Router from './src/router'
+import 'react-native-gesture-handler';
 
 export default class Main extends Component {
 
@@ -9,8 +8,7 @@ export default class Main extends Component {
 
   render() {
     return (
-
-      <TelaInicial></TelaInicial>
+      <Router/>
     )
   }
 
