@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { View, FlatList } from 'react-native';
 import UserItem from '../components/userItem'
 import service from '../../service'
-// import { Container } from './styles';
-
 export default class TelaContatos extends Component {
 
     constructor(){
@@ -28,7 +26,11 @@ export default class TelaContatos extends Component {
             <FlatList
             data={this.state.users}
             keyExtractor ={(item, index) => item._id.toString()}
-            renderItem ={({item, index}) => <UserItem {...item} />}
+            renderItem ={({item, index}) => <UserItem {...item}
+            handlePress ={() =>{
+                this.props.navigation.navigate('TelaMessage',{...item})
+            }}
+            />}
             />
         </View>
     );

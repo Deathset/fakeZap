@@ -21,8 +21,6 @@ export default class TelaInicial extends Component {
             </View>
         )
     }
-
-
 }
 
 
