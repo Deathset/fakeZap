@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, ScrollView, TextInput, Button, Text, SafeAreaView, FlatList, Dimensions, TouchableNativeFeedback } from 'react-native'
+import { View,  TextInput, Text, FlatList, Dimensions, TouchableNativeFeedback } from 'react-native'
 import socketIoClient from 'socket.io-client'
 import service from '../../service'
 let { height, width } = Dimensions.get('window')
@@ -10,29 +10,32 @@ export default class TelaMensagem extends Component {
     this.state ={
       msg:[],
       socket: socketIoClient(service.server),
-      lastmsg:''
+      lastmsg:'',
+      userInfo:{}
     }
+}
+ 
+  async componentDidMount(){
+   await this.setState({userInfo:this.props.navigation.getParam('userInfo')})
+    
+   console.log(this.state.userInfo._id)
 
     this.state.socket.on('lastMessager', msg =>{
       this.setState({msg:[...this.state.msg, msg ]})
     })
-  }
- 
-  componentDidMount(){
-    
+
+
   } 
 
-  getMessager(){
-    //this.state.socket.emit('send', this.state.) 
-  }
   async sendMessager(){
     let msg = {
-      sendBy: 'LeoAlves',
-      sender_id:  '5e285815acf01e1e260e08c9',
+      sendBy: this.state.userInfo.nome_usuario,
+      sender_id:  this.state.userInfo._id,
       recipient_id: this.props.navigation.getParam('_id'),
       body: this.state.lastmsg,
       date: new Date()
     }
+
     this.state.socket.emit('send', msg)
     this.setState({lastmsg:''})
   }
@@ -50,7 +53,7 @@ export default class TelaMensagem extends Component {
             <FlatList
             data={this.state.msg}
             keyExtractor={(item, index) =>  (Math.random() *2).toString()}
-            renderItem={this.renderItem}
+            renderItem={({item, index}) => this.renderItem(item, index, this.state.userInfo)}
             />
           </View>
             <View style={{height: height/9 , flexDirection:'row', justifyContent:'space-around', alignItems:'center'}}>
@@ -69,10 +72,10 @@ export default class TelaMensagem extends Component {
     )
   }
 
-  renderItem({item, index}){
-    
-
-    return(
+  renderItem(item, index, {_id}){
+    console.log(_id,'aqui')
+    if(item.sender_id == _id){
+      return(
       <TouchableNativeFeedback>
         <View  style ={{ backgroundColor:'#fff', marginVertical:10, elevation:10, borderRadius:20}}>
         <View style={{padding:10, alignItems:'flex-start'}}>
@@ -81,7 +84,20 @@ export default class TelaMensagem extends Component {
         </View>
         </View>
       </TouchableNativeFeedback>
-    )
+      )
+    }else if(item.sender_id ==  this.props.navigation.getParam('_id')){
+      return(
+        <TouchableNativeFeedback>
+        <View  style ={{ backgroundColor:'#fff', marginVertical:10, elevation:10, borderRadius:20}}>
+        <View style={{padding:10, alignItems:'flex-start'}}>
+          <Text style={{color:'#20FF0A'}}>{item.sendBy}</Text>
+          <Text style={{fontSize:16, fontWeight:'bold', textAlign:'auto'}}>{item.body}</Text>
+        </View>
+        </View>
+      </TouchableNativeFeedback>
+      )
+    }
+  
   }
 }
 

@@ -13,7 +13,7 @@ const AppNavigation = createStackNavigator(
    TelaContatos
 },
 {
-    initialRouteName:'TelaContatos',
+    initialRouteName:'TelaInicial',
 }
 ) 
 

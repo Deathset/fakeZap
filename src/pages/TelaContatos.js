@@ -4,16 +4,18 @@ import UserItem from '../components/userItem'
 import service from '../../service'
 export default class TelaContatos extends Component {
 
+
     constructor(){
         super()
         this.state ={
-            users:[]
+            users:[],
+            usuario:{}
         }
     }
 
    async getUsers(){
         let users = await service.get('/users')
-        this.setState({users})
+        this.setState({users, usuario: this.props.navigation.getParam('usuario')})
     }
 
     componentDidMount(){
@@ -21,6 +23,7 @@ export default class TelaContatos extends Component {
     }
 
   render() {
+
     return(
         <View style={{backgroundColor:'#2C2068', flex:1}}>
             <FlatList
@@ -28,7 +31,7 @@ export default class TelaContatos extends Component {
             keyExtractor ={(item, index) => item._id.toString()}
             renderItem ={({item, index}) => <UserItem {...item}
             handlePress ={() =>{
-                this.props.navigation.navigate('TelaMessage',{...item})
+                this.props.navigation.navigate('TelaMessage',{...item, userInfo: this.state.usuario})
             }}
             />}
             />
