@@ -50,6 +50,8 @@ export default class TelaInicial extends Component {
 
         console.log(tmp)
 
+
+
         let resp = await service.post('/new/user', tmp)
 
         console.log(resp)
@@ -57,9 +59,6 @@ export default class TelaInicial extends Component {
         this.props.navigation.navigate('TelaContatos',{resp})
 
     }
-
-
-
 }
 
 const styles = StyleSheet.create({
