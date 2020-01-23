@@ -12,13 +12,14 @@ export default class TelaMensagem extends Component {
       socket: socketIoClient(service.server),
       lastmsg:''
     }
+
+    this.state.socket.on('lastMessager', msg =>{
+      this.setState({msg:[...this.state.msg, msg ]})
+    })
   }
  
   componentDidMount(){
-    this.state.socket.on('lastMessager', msg =>{
-      this.setState({msg:[...this.state.msg, msg ]})
-      console.log('aqui2')
-    })
+    
   } 
 
   getMessager(){
@@ -26,9 +27,11 @@ export default class TelaMensagem extends Component {
   }
   async sendMessager(){
     let msg = {
-      _id: this.props.navigation.getParam('_id'),
-      sendBy: this.props.navigation.getParam('nome_usuario'),
-      msg: this.state.lastmsg
+      sendBy: 'LeoAlves',
+      sender_id:  '5e285815acf01e1e260e08c9',
+      recipient_id: this.props.navigation.getParam('_id'),
+      body: this.state.lastmsg,
+      date: new Date()
     }
     this.state.socket.emit('send', msg)
     this.setState({lastmsg:''})
@@ -67,12 +70,14 @@ export default class TelaMensagem extends Component {
   }
 
   renderItem({item, index}){
+    
+
     return(
       <TouchableNativeFeedback>
         <View  style ={{ backgroundColor:'#fff', marginVertical:10, elevation:10, borderRadius:20}}>
         <View style={{padding:10, alignItems:'flex-start'}}>
           <Text style={{color:'red'}}>{item.sendBy}</Text>
-          <Text style={{fontSize:16, fontWeight:'bold', textAlign:'auto'}}>{item.msg}</Text>
+          <Text style={{fontSize:16, fontWeight:'bold', textAlign:'auto'}}>{item.body}</Text>
         </View>
         </View>
       </TouchableNativeFeedback>
