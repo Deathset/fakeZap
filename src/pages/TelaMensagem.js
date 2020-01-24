@@ -17,27 +17,37 @@ export default class TelaMensagem extends Component {
  
   async componentDidMount(){
    await this.setState({userInfo:this.props.navigation.getParam('userInfo')})
-    
-   console.log(this.state.userInfo._id)
-
+  
     this.state.socket.on('lastMessager', msg =>{
-      this.setState({msg:[...this.state.msg, msg ]})
+      this.setState({msg:[msg,...this.state.msg  ]})
+    })
+    
+    this.state.socket.on('allMsg', msg =>{
+      console.log(msg,11)
+      this.setState({msg})
     })
 
+    let tmp = {  
+      sender_id:  this.state.userInfo._id,
+      recipient_id: this.props.navigation.getParam('_id')}
+
+      this.state.socket.emit('getMessages', tmp)
 
   } 
 
   async sendMessager(){
-    let msg = {
-      sendBy: this.state.userInfo.nome_usuario,
-      sender_id:  this.state.userInfo._id,
-      recipient_id: this.props.navigation.getParam('_id'),
-      body: this.state.lastmsg,
-      date: new Date()
+    if(this.state.lastmsg){
+      let msg = {
+        sendBy: this.state.userInfo.nome_usuario,
+        sender_id:  this.state.userInfo._id,
+        recipient_id: this.props.navigation.getParam('_id'),
+        body: this.state.lastmsg,
+        date: new Date()
+      }
+  
+      this.state.socket.emit('send', msg)
+      this.setState({lastmsg:''})
     }
-
-    this.state.socket.emit('send', msg)
-    this.setState({lastmsg:''})
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -54,6 +64,7 @@ export default class TelaMensagem extends Component {
             data={this.state.msg}
             keyExtractor={(item, index) =>  (Math.random() *2).toString()}
             renderItem={({item, index}) => this.renderItem(item, index, this.state.userInfo)}
+            inverted={true}
             />
           </View>
             <View style={{height: height/9 , flexDirection:'row', justifyContent:'space-around', alignItems:'center'}}>
@@ -73,14 +84,13 @@ export default class TelaMensagem extends Component {
   }
 
   renderItem(item, index, {_id}){
-    console.log(_id,'aqui')
     if(item.sender_id == _id){
       return(
       <TouchableNativeFeedback>
-        <View  style ={{ backgroundColor:'#fff', marginVertical:10, elevation:10, borderRadius:20}}>
-        <View style={{padding:10, alignItems:'flex-start'}}>
-          <Text style={{color:'red'}}>{item.sendBy}</Text>
-          <Text style={{fontSize:16, fontWeight:'bold', textAlign:'auto'}}>{item.body}</Text>
+        <View  style ={{ backgroundColor:'#fff', alignSelf:'flex-end' ,marginVertical:10, elevation:10, borderRadius:20}}>
+        <View style={{padding:10 ,alignItems:'flex-end',marginHorizontal:15 }}>
+          <Text style={{color:'red', fontWeight:'bold'}}>{item.sendBy}</Text>
+          <Text style={{fontSize:16, fontWeight:'bold'}}>{item.body}</Text>
         </View>
         </View>
       </TouchableNativeFeedback>
@@ -88,8 +98,8 @@ export default class TelaMensagem extends Component {
     }else if(item.sender_id ==  this.props.navigation.getParam('_id')){
       return(
         <TouchableNativeFeedback>
-        <View  style ={{ backgroundColor:'#fff', marginVertical:10, elevation:10, borderRadius:20}}>
-        <View style={{padding:10, alignItems:'flex-start'}}>
+        <View  style ={{  backgroundColor:'#fff', alignSelf:'flex-start' ,marginVertical:10, elevation:10, borderRadius:20}}>
+          <View style={{padding:10, marginHorizontal:15 ,alignItems:'flex-start'}}>
           <Text style={{color:'#20FF0A'}}>{item.sendBy}</Text>
           <Text style={{fontSize:16, fontWeight:'bold', textAlign:'auto'}}>{item.body}</Text>
         </View>
